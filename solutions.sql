@@ -67,11 +67,12 @@ LIMIT 5;
 SELECT 
     f.title,
     s.store_id,
-    COUNT(i.inventory_id) AS total_copies,
-    SUM(CASE WHEN i.inventory_id THEN 1 ELSE 0 END) AS available_copies
+    COUNT(i.film_id) AS total_copies,
+    Count(CASE WHEN i.film_id = 1 AND r.return_date is not null THEN 1 ELSE 0 END) AS available_copies
 FROM film f
 JOIN inventory i ON f.film_id = i.film_id
 JOIN store s ON i.store_id = s.store_id
-WHERE f.title = 'ACADEMY DINOSAUR' AND s.store_id = 1
+LEft Join rental r ON i.inventory_id = r.inventory_id
+WHERE f.title = 'ACADEMY DINOSAUR' AND r.inventory_id BETWEEN 1 AND 8 AND i.store_id = 1
 GROUP BY f.film_id, f.title, s.store_id;
 
